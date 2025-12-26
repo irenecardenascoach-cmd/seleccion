@@ -116,6 +116,55 @@ function score(ans){
 
 document.getElementById("form").onsubmit = async e=>{
   e.preventDefault();
+  const msg = document.getElementById("msg");
+  msg.innerHTML = "<div class='warn'>Enviando… por favor espera</div>";
+
+  try {
+    const ans=[];
+    for(let i=1;i<=30;i++){
+      ans.push(+document.querySelector(`input[name=q${i}]:checked`).value);
+    }
+
+    const r = score(ans);
+
+    const payload = {
+      key: ADMIN_KEY,
+      timestamp: new Date().toISOString(),
+      candidate:{
+        nombre: nombre.value,
+        correo: correo.value
+      },
+      answers_raw: ans,
+      sums: r.sums,
+      levels: r.levels,
+      internal_flag:{
+        attention:(r.levels.BO==="Alto"||r.levels.STS==="Alto")?"ALERTA":"OK"
+      }
+    };
+
+    const res = await fetch(APPS_SCRIPT_WEBAPP_URL,{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if(!res.ok){
+      throw new Error("No se pudo enviar. Código " + res.status);
+    }
+
+    msg.innerHTML =
+      "<div class='ok'><b>Formulario enviado correctamente.</b></div>";
+    e.target.reset();
+
+  } catch(err){
+    msg.innerHTML =
+      "<div class='warn'><b>Error al enviar.</b><br>" +
+      "Intenta nuevamente o avisa al reclutador.<br><small>" +
+      err.message + "</small></div>";
+    console.error(err);
+  }
+};
+
   const ans=[];
   for(let i=1;i<=30;i++){
     ans.push(+document.querySelector(`input[name=q${i}]:checked`).value);
