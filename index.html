@@ -5,46 +5,80 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ProQOL-5 | Selección (Privado)</title>
   <style>
-    body{font-family:system-ui,Arial;margin:0;background:#f6f7fb}
-    .wrap{max-width:900px;margin:30px auto;background:#fff;padding:20px;border-radius:12px}
-    h1{margin-top:0}
-    fieldset{border:1px solid #ddd;border-radius:10px;margin-bottom:12px;padding:12px}
-    legend{font-weight:600}
-    .likert label{margin-right:10px}
-    button{padding:12px 16px;border-radius:10px;border:none;font-weight:600}
-    .ok{background:#e8fff0;padding:12px;border-radius:10px}
-    .warn{background:#fff3cd;padding:12px;border-radius:10px}
+    :root { color-scheme: light; }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f6f7fb;color:#111}
+    .wrap{max-width:980px;margin:22px auto;background:#fff;padding:18px;border-radius:14px;border:1px solid #e7e7ef;box-shadow:0 8px 26px rgba(0,0,0,.06)}
+    h1{margin:0 0 6px;font-size:20px}
+    p{margin:0 0 12px;color:#444;line-height:1.35}
+    .card{background:#fff;border:1px solid #ececf5;border-radius:14px;padding:14px;margin:12px 0}
+    fieldset{border:1px solid #e7e7ef;border-radius:12px;margin:10px 0;padding:12px}
+    legend{font-weight:700;font-size:14px}
+    .likert{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .likert label{border:1px solid #dcdcf0;border-radius:999px;padding:6px 10px;background:#fafaff;cursor:pointer;user-select:none}
+    .likert input{margin-right:6px}
+    .row{display:grid;gap:10px}
+    @media(min-width:720px){ .row{grid-template-columns:1fr 1fr} }
+    input[type="text"],input[type="email"]{width:100%;padding:10px 12px;border:1px solid #dcdcf0;border-radius:12px;font-size:14px}
+    button{padding:12px 16px;border-radius:12px;border:none;font-weight:800;cursor:pointer}
+    button.primary{background:#111;color:#fff}
+    button.ghost{background:#eef0ff;color:#111}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:12px}
+    .ok{background:#eafff0;border:1px solid #baf2c9;padding:12px;border-radius:12px}
+    .warn{background:#fff7e6;border:1px solid #ffe3a3;padding:12px;border-radius:12px}
+    .err{background:#fff0f0;border:1px solid #ffbcbc;padding:12px;border-radius:12px}
+    .muted{color:#555;font-size:12px;line-height:1.35}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+    .topnote{background:#fff7e6;border:1px solid #ffe3a3;border-radius:12px;padding:10px 12px;margin-bottom:12px}
   </style>
 </head>
 
 <body>
-<div class="wrap">
-  <h1>ProQOL-5</h1>
-  <p>Responde según los <b>últimos 30 días</b>. Escala 1–5.</p>
+  <div class="wrap">
+    <h1>ProQOL-5</h1>
+    <p>Responde pensando en los <b>últimos 30 días</b>. Escala: <b>1</b>=Nunca, <b>2</b>=Rara vez, <b>3</b>=Algunas veces, <b>4</b>=A menudo, <b>5</b>=Muy a menudo.</p>
 
-  <form id="form">
-    <label>Nombre<br>
-      <input id="nombre" required style="width:100%;padding:8px">
-    </label><br><br>
+    <div class="topnote">
+      <b>Importante:</b> Este formulario es para proceso de selección y bienestar ocupacional. No es diagnóstico.
+    </div>
 
-    <label>Email (opcional)<br>
-      <input id="correo" type="email" style="width:100%;padding:8px">
-    </label><br><br>
+    <form id="form" class="card" novalidate>
+      <div class="row">
+        <label>
+          <b>Nombre completo</b><br />
+          <input id="nombre" type="text" required placeholder="Ej. Irene Cárdenas" />
+        </label>
 
-    <div id="preguntas"></div>
+        <label>
+          <b>Email</b> <span class="muted">(opcional)</span><br />
+          <input id="correo" type="email" placeholder="correo@ejemplo.com" />
+        </label>
+      </div>
 
-    <button type="submit">Enviar</button>
-  </form>
+      <div id="preguntas"></div>
 
-  <div id="msg"></div>
-</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <button class="primary" id="btnEnviar" type="submit">Enviar</button>
+        <button class="ghost" id="btnLimpiar" type="button">Limpiar</button>
+      </div>
+
+      <div id="msg" class="msg"></div>
+
+      <div class="muted" style="margin-top:10px">
+        Referencia: Stamm, B. H. (2010). <i>The Professional Quality of Life Scale: Compassion Satisfaction and Fatigue Version 5 (ProQOL)</i>. ProQOL.org
+      </div>
+    </form>
+  </div>
 
 <script>
-/* ================== CONFIGURACIÓN ================== */
-const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyQ6UM-shJOAnp0uMe5pR3RK0-7O5MsK8t3oCM_5H65MJvuvMLMxrNKYIN8VOhsQO3E/exec";
-const ADMIN_KEY = "Ire_2026";
-/* ================================================== */
+/* ================== CONFIGURACIÓN (CAMBIA SOLO ESTO) ================== */
+const APPS_SCRIPT_WEBAPP_URL = "PEGA_AQUI_TU_URL_/exec";  // ej: https://script.google.com/macros/s/AKfy.../exec
+const ADMIN_KEY = "Ire_2026";                              // debe coincidir con tu Apps Script
+/* ===================================================================== */
 
+/***********************
+ * ÍTEMS (ES-LATAM)
+ ***********************/
 const ITEMS = [
  "Me siento feliz.",
  "Me preocupo por más de una persona a la que ayudo.",
@@ -52,151 +86,220 @@ const ITEMS = [
  "Me siento conectado/a con los demás.",
  "Me sobresalto o me altero ante ruidos inesperados.",
  "Me siento con energía después de trabajar con las personas a las que ayudo.",
- "Me resulta difícil separar mi vida personal de mi vida laboral.",
- "No soy tan productivo/a porque pierdo sueño por historias traumáticas.",
- "Creo que he sido afectado/a por el estrés traumático de otros.",
- "Me siento atrapado/a por mi trabajo.",
- "Me he sentido en tensión o alerta.",
- "Me gusta mi trabajo.",
- "Me siento deprimido/a por las experiencias de otros.",
- "Siento que revivo el trauma de alguien.",
+ "Me resulta difícil separar mi vida personal de mi vida laboral como profesional de ayuda.",
+ "No soy tan productivo/a en el trabajo porque pierdo sueño debido a experiencias traumáticas de las personas a las que ayudo.",
+ "Pienso que puedo haber sido afectado/a por el estrés traumático de las personas a las que ayudo.",
+ "Me siento atrapado/a por mi trabajo como profesional de ayuda.",
+ "Debido a mi trabajo de ayuda, me he sentido “en tensión” o alerta por diversas cosas.",
+ "Me gusta mi trabajo como profesional de ayuda.",
+ "Me siento deprimido/a debido a las experiencias traumáticas de las personas a las que ayudo.",
+ "Siento como si estuviera viviendo el trauma de alguien a quien he ayudado.",
  "Tengo creencias que me sostienen.",
- "Estoy satisfecho/a con mi actualización profesional.",
+ "Estoy satisfecho/a con la forma en que logro mantenerme actualizado/a en técnicas y protocolos de ayuda.",
  "Soy la persona que siempre quise ser.",
- "Mi trabajo me da satisfacción.",
- "Me siento agotado/a.",
- "Tengo pensamientos positivos sobre ayudar.",
- "Mi carga laboral parece interminable.",
- "Creo que marco una diferencia.",
- "Evito cosas que me recuerdan traumas.",
- "Me siento orgulloso/a de ayudar.",
- "Tengo pensamientos intrusivos.",
- "Me siento bloqueado/a por el sistema.",
- "Me considero exitoso/a.",
- "No recuerdo partes importantes del trabajo con trauma.",
- "Soy una persona compasiva.",
- "Estoy satisfecho/a con haber elegido este trabajo."
+ "Mi trabajo me hace sentir satisfecho/a.",
+ "Me siento agotado/a debido a mi trabajo como profesional de ayuda.",
+ "Tengo pensamientos y sentimientos positivos sobre las personas a las que ayudo y sobre cómo puedo ayudarlas.",
+ "Me siento abrumado/a porque mi carga de trabajo parece interminable.",
+ "Creo que puedo marcar una diferencia a través de mi trabajo.",
+ "Evito ciertas actividades o situaciones porque me recuerdan experiencias aterradoras de las personas a las que ayudo.",
+ "Me siento orgulloso/a de lo que puedo hacer para ayudar.",
+ "Como resultado de mi trabajo de ayuda, tengo pensamientos intrusivos y perturbadores.",
+ "Me siento atrapado/a o bloqueado/a por el sistema en el que trabajo.",
+ "Tengo pensamientos de que soy una persona exitosa como profesional de ayuda.",
+ "No puedo recordar partes importantes de mi trabajo con personas que han vivido traumas.",
+ "Soy una persona muy compasiva.",
+ "Me siento satisfecho/a de haber elegido este tipo de trabajo."
 ];
 
+// Reverse-scored item numbers (1-based)
 const REVERSE = new Set([1,4,15,17,29]);
+
+// Subscales (1-based)
 const SUB = {
- CS:[3,6,12,16,18,20,22,24,27,30],
- BO:[1,4,8,10,15,17,19,21,26,29],
- STS:[2,5,7,9,11,13,14,23,25,28]
+  CS:[3,6,12,16,18,20,22,24,27,30],
+  BO:[1,4,8,10,15,17,19,21,26,29],
+  STS:[2,5,7,9,11,13,14,23,25,28]
 };
 
-const cont = document.getElementById("preguntas");
-ITEMS.forEach((t,i)=>{
-  cont.innerHTML += `
-   <fieldset>
-    <legend>${i+1}. ${t}</legend>
-    ${[1,2,3,4,5].map(v=>`
-      <label><input type="radio" name="q${i+1}" value="${v}" required> ${v}</label>
-    `).join("")}
-   </fieldset>`;
-});
+function reverseScore(v){ return 6 - v; }
 
-function score(ans){
-  const s = ans.map((v,i)=>REVERSE.has(i+1)?6-v:v);
-  const sum = a=>a.reduce((t,i)=>t+s[i-1],0);
-  const lvl = x=>x<=22?"Bajo":x>=42?"Alto":"Promedio";
-  return {
-    sums:{
-      CS:sum(SUB.CS),
-      BO:sum(SUB.BO),
-      STS:sum(SUB.STS)
-    },
-    levels:{
-      CS:lvl(sum(SUB.CS)),
-      BO:lvl(sum(SUB.BO)),
-      STS:lvl(sum(SUB.STS))
-    }
-  };
+function levelFromSum(sum){
+  // 10 items => 10–50
+  if(sum <= 22) return "Bajo";
+  if(sum >= 42) return "Alto";
+  return "Promedio";
 }
 
-document.getElementById("form").onsubmit = async e=>{
+function scoreAnswers(raw){
+  const scored = raw.map((v,i)=> REVERSE.has(i+1) ? reverseScore(v) : v);
+
+  const sum = (arr) => arr.reduce((acc, itemNo) => acc + scored[itemNo-1], 0);
+
+  const sums = {
+    CS: sum(SUB.CS),
+    BO: sum(SUB.BO),
+    STS: sum(SUB.STS)
+  };
+
+  const levels = {
+    CS: levelFromSum(sums.CS),
+    BO: levelFromSum(sums.BO),
+    STS: levelFromSum(sums.STS)
+  };
+
+  const attention = (levels.BO === "Alto" || levels.STS === "Alto") ? "ALERTA" : "OK";
+
+  return { scored, sums, levels, attention };
+}
+
+/***********************
+ * UI helpers
+ ***********************/
+const cont = document.getElementById("preguntas");
+const msg = document.getElementById("msg");
+const btnEnviar = document.getElementById("btnEnviar");
+
+function show(kind, html){
+  const cls = kind === "ok" ? "ok" : (kind === "err" ? "err" : "warn");
+  msg.innerHTML = `<div class="${cls}">${html}</div>`;
+}
+
+function render(){
+  const frag = document.createDocumentFragment();
+  ITEMS.forEach((text, idx)=>{
+    const n = idx + 1;
+    const fs = document.createElement("fieldset");
+    const lg = document.createElement("legend");
+    lg.textContent = `${n}. ${text}`;
+    fs.appendChild(lg);
+
+    const div = document.createElement("div");
+    div.className = "likert";
+    [1,2,3,4,5].forEach(v=>{
+      const label = document.createElement("label");
+      label.innerHTML = `<input type="radio" name="q${n}" value="${v}"> ${v}`;
+      div.appendChild(label);
+    });
+    fs.appendChild(div);
+
+    frag.appendChild(fs);
+  });
+  cont.innerHTML = "";
+  cont.appendChild(frag);
+}
+
+function validateAllAnswered(){
+  const missing = [];
+  for(let i=1;i<=30;i++){
+    const checked = document.querySelector(`input[name="q${i}"]:checked`);
+    if(!checked) missing.push(i);
+  }
+  return missing;
+}
+
+function getRawAnswers(){
+  const raw = [];
+  for(let i=1;i<=30;i++){
+    const checked = document.querySelector(`input[name="q${i}"]:checked`);
+    raw.push(parseInt(checked.value, 10));
+  }
+  return raw;
+}
+
+/***********************
+ * Submit handler
+ ***********************/
+document.getElementById("form").addEventListener("submit", async (e)=>{
   e.preventDefault();
-  const msg = document.getElementById("msg");
-  msg.innerHTML = "<div class='warn'>Enviando… por favor espera</div>";
+  msg.innerHTML = "";
 
-  try {
-    const ans=[];
-    for(let i=1;i<=30;i++){
-      ans.push(+document.querySelector(`input[name=q${i}]:checked`).value);
-    }
+  const nombre = document.getElementById("nombre").value.trim();
+  const correo = document.getElementById("correo").value.trim();
 
-    const r = score(ans);
+  if(!nombre){
+    show("warn", "<b>Falta tu nombre.</b>");
+    document.getElementById("nombre").focus();
+    return;
+  }
+
+  const missing = validateAllAnswered();
+  if(missing.length){
+    show("warn",
+      `<b>Te faltan preguntas por responder:</b> ${missing.slice(0,12).join(", ")}${missing.length>12?"…":""}<br>
+       <span class="muted">Tip: baja hasta la pregunta ${missing[0]} y marca una opción.</span>`
+    );
+    // scroll to first missing question
+    document.querySelector(`input[name="q${missing[0]}"]`)?.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+
+  // Basic URL sanity
+  if(!APPS_SCRIPT_WEBAPP_URL || !APPS_SCRIPT_WEBAPP_URL.includes("/macros/s/") || !APPS_SCRIPT_WEBAPP_URL.endsWith("/exec")){
+    show("err",
+      `<b>Configuración incompleta.</b><br>
+       La URL del Web App no está bien pegada.<br>
+       <span class="muted mono">Debe verse como https://script.google.com/macros/s/…/exec</span>`
+    );
+    return;
+  }
+
+  btnEnviar.disabled = true;
+  btnEnviar.textContent = "Enviando…";
+  show("warn", "<b>Enviando…</b> por favor espera.");
+
+  try{
+    const raw = getRawAnswers();
+    const r = scoreAnswers(raw);
 
     const payload = {
       key: ADMIN_KEY,
+      instrument: "ProQOL-5 (Spanish LATAM adaptation)",
       timestamp: new Date().toISOString(),
-      candidate:{
-        nombre: nombre.value,
-        correo: correo.value
-      },
-      answers_raw: ans,
+      candidate: { nombre, correo },
+      answers_raw: raw,
+      answers_scored: r.scored,
       sums: r.sums,
       levels: r.levels,
-      internal_flag:{
-        attention:(r.levels.BO==="Alto"||r.levels.STS==="Alto")?"ALERTA":"OK"
-      }
+      internal_flag: { attention: r.attention }
     };
 
-    const res = await fetch(APPS_SCRIPT_WEBAPP_URL,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
+    // IMPORTANT: text/plain avoids many mobile CORS/preflight issues
+    const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
 
+    // If Google returns something odd, we still handle it
     if(!res.ok){
-      throw new Error("No se pudo enviar. Código " + res.status);
+      const t = await res.text().catch(()=> "");
+      throw new Error(`No se pudo enviar (HTTP ${res.status}). ${t}`);
     }
 
-    msg.innerHTML =
-      "<div class='ok'><b>Formulario enviado correctamente.</b></div>";
+    show("ok", "<b>Formulario enviado correctamente.</b> Gracias.");
     e.target.reset();
 
   } catch(err){
-    msg.innerHTML =
-      "<div class='warn'><b>Error al enviar.</b><br>" +
-      "Intenta nuevamente o avisa al reclutador.<br><small>" +
-      err.message + "</small></div>";
     console.error(err);
+    show("err",
+      `<b>Error al enviar.</b><br>
+       Por favor intenta nuevamente. Si persiste, avisa al reclutador.<br>
+       <span class="muted mono">${String(err.message || err)}</span>`
+    );
+  } finally {
+    btnEnviar.disabled = false;
+    btnEnviar.textContent = "Enviar";
   }
-};
+});
 
-  const ans=[];
-  for(let i=1;i<=30;i++){
-    ans.push(+document.querySelector(`input[name=q${i}]:checked`).value);
-  }
+document.getElementById("btnLimpiar").addEventListener("click", ()=>{
+  document.getElementById("form").reset();
+  msg.innerHTML = "";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
 
-  const r = score(ans);
-
-  const payload = {
-    key: ADMIN_KEY,
-    timestamp: new Date().toISOString(),
-    candidate:{
-      nombre: nombre.value,
-      correo: correo.value
-    },
-    answers_raw: ans,
-    sums: r.sums,
-    levels: r.levels,
-    internal_flag:{
-      attention:(r.levels.BO==="Alto"||r.levels.STS==="Alto")?"ALERTA":"OK"
-    }
-  };
-
-  await fetch(APPS_SCRIPT_WEBAPP_URL,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(payload)
-  });
-
-  document.getElementById("msg").innerHTML =
-    "<div class='ok'><b>Formulario enviado correctamente.</b></div>";
-  e.target.reset();
-};
+render();
 </script>
 </body>
 </html>
