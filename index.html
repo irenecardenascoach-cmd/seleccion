@@ -3,314 +3,151 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ProQOL-5 — Español (LATAM) + Resultados automáticos</title>
+  <title>ProQOL-5 | Selección (Privado)</title>
   <style>
-    :root { color-scheme: light; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background:#f6f7fb; color:#111; }
-    header { padding: 22px 16px; background: white; border-bottom: 1px solid #e7e7ef; position: sticky; top:0; z-index:10; }
-    header h1 { margin: 0 0 6px; font-size: 18px; }
-    header p { margin: 0; color:#444; font-size: 13px; line-height: 1.35; }
-    main { max-width: 980px; margin: 18px auto 60px; padding: 0 14px; }
-    .card { background: white; border:1px solid #e7e7ef; border-radius: 14px; padding: 14px; box-shadow: 0 6px 22px rgba(17,17,17,0.06); }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 900px){ .grid { grid-template-columns: 1.15fr 0.85fr; } }
-    .q { border: 1px solid #ececf5; border-radius: 12px; padding: 12px; background: #fff; }
-    .q legend { font-weight: 650; font-size: 14px; }
-    .q small { display:block; color:#555; margin-top:6px; }
-    .likert { display:flex; flex-wrap:wrap; gap: 10px; margin-top: 10px; }
-    .likert label { border:1px solid #dcdcf0; border-radius: 999px; padding: 6px 10px; cursor:pointer; user-select:none; font-size: 13px; background:#fafaff; }
-    .likert input { margin-right: 6px; }
-    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    button { border: 0; border-radius: 12px; padding: 10px 14px; cursor:pointer; font-weight: 750; }
-    button.primary { background:#111; color:white; }
-    button.ghost { background:#eef0ff; color:#111; }
-    .muted { color:#555; font-size: 12px; line-height: 1.35; }
-    .results { margin-top: 14px; }
-    .pill { display:inline-block; padding: 4px 10px; border-radius: 999px; font-weight: 800; font-size: 12px; background:#f0f0f0; }
-    .bar { height: 10px; background:#eee; border-radius: 999px; overflow:hidden; margin-top: 6px; }
-    .bar > div { height: 100%; width: 0%; background:#111; }
-    .row { display:flex; justify-content: space-between; gap:10px; align-items: baseline; }
-    .kpi { border:1px solid #ececf5; border-radius: 12px; padding: 12px; }
-    .kpi h3 { margin: 0 0 6px; font-size: 14px; }
-    .kpi p { margin: 0; font-size: 13px; color:#333; line-height: 1.35; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
-    .warn { background:#fff7e6; border:1px solid #ffe3a3; border-radius: 12px; padding: 10px 12px; }
-    details summary { cursor:pointer; }
-    a { color:#111; }
+    body{font-family:system-ui,Arial;margin:0;background:#f6f7fb}
+    .wrap{max-width:900px;margin:30px auto;background:#fff;padding:20px;border-radius:12px}
+    h1{margin-top:0}
+    fieldset{border:1px solid #ddd;border-radius:10px;margin-bottom:12px;padding:12px}
+    legend{font-weight:600}
+    .likert label{margin-right:10px}
+    button{padding:12px 16px;border-radius:10px;border:none;font-weight:600}
+    .ok{background:#e8fff0;padding:12px;border-radius:10px}
+    .warn{background:#fff3cd;padding:12px;border-radius:10px}
   </style>
 </head>
+
 <body>
-<header>
-  <h1>ProQOL-5 — Español (LATAM) + resultados automáticos</h1>
-  <p>
-    Responde pensando en los <b>últimos 30 días</b>. Escala: 1=Nunca, 2=Rara vez, 3=Algunas veces, 4=A menudo, 5=Muy a menudo.
-    <br><span class="muted"><b>Nota:</b> esta es una <b>adaptación al español LATAM</b> para uso interno. Para investigación/publicación, usa una traducción oficialmente listada por ProQOL.org.</span>
-  </p>
-</header>
+<div class="wrap">
+  <h1>ProQOL-5</h1>
+  <p>Responde según los <b>últimos 30 días</b>. Escala 1–5.</p>
 
-<main class="grid">
-  <section class="card">
-    <form id="proqolForm">
-      <div class="warn" style="margin-bottom:12px">
-        <b>Uso ético recomendado (selección):</b>
-        <div class="muted" style="margin-top:6px">
-          Esto es un <i>screening</i> de calidad de vida profesional (Satisfacción por compasión, Burnout y Estrés Traumático Secundario).
-          No sustituye una evaluación clínica ni debe usarse como único criterio de contratación.
-        </div>
-      </div>
+  <form id="form">
+    <label>Nombre<br>
+      <input id="nombre" required style="width:100%;padding:8px">
+    </label><br><br>
 
-      <div id="questions"></div>
+    <label>Email (opcional)<br>
+      <input id="correo" type="email" style="width:100%;padding:8px">
+    </label><br><br>
 
-      <div class="actions">
-        <button class="primary" type="submit">Calcular resultados</button>
-        <button class="ghost" type="button" id="btnReset">Limpiar</button>
-        <button class="ghost" type="button" id="btnExport">Exportar respuestas (JSON)</button>
-      </div>
+    <div id="preguntas"></div>
 
-      <p class="muted" style="margin-top:10px">
-        Referencia: Stamm, B. H. (2010). <i>The Professional Quality of Life Scale: Compassion Satisfaction and Fatigue Version 5 (ProQOL)</i>. ProQOL.org
-      </p>
-    </form>
-  </section>
+    <button type="submit">Enviar</button>
+  </form>
 
-  <aside class="card">
-    <div class="results" id="results" style="display:none">
-      <h2 style="margin: 0 0 10px; font-size: 16px;">Resultados</h2>
-
-      <div class="kpi" id="kpiCS"></div>
-      <div style="height:10px"></div>
-      <div class="kpi" id="kpiBO"></div>
-      <div style="height:10px"></div>
-      <div class="kpi" id="kpiSTS"></div>
-
-      <div class="muted" style="margin-top:12px">
-        <b>Rangos (suma 10 ítems; 10–50):</b><br>
-        Bajo: ≤22 • Promedio: 23–41 • Alto: ≥42
-      </div>
-
-      <details class="muted" style="margin-top:10px">
-        <summary><b>Ver cómo se calcula</b></summary>
-        <div style="margin-top:8px">
-          1) Se invierten los ítems: <span class="mono">1, 4, 15, 17, 29</span> (1↔5; 2↔4; 3=3).<br>
-          2) Se suman subescalas:<br>
-          <span class="mono">CS:</span> 3,6,12,16,18,20,22,24,27,30<br>
-          <span class="mono">BO:</span> 1,4,8,10,15,17,19,21,26,29<br>
-          <span class="mono">STS:</span> 2,5,7,9,11,13,14,23,25,28
-        </div>
-      </details>
-    </div>
-
-    <div class="muted">
-      <h2 style="margin:0 0 10px; font-size: 16px;">Escala</h2>
-      <div class="muted">
-        <b>1</b> Nunca · <b>2</b> Rara vez · <b>3</b> Algunas veces · <b>4</b> A menudo · <b>5</b> Muy a menudo
-      </div>
-    </div>
-  </aside>
-</main>
+  <div id="msg"></div>
+</div>
 
 <script>
-  const ITEMS = [
-    "Me siento feliz.",
-    "Me preocupo por más de una persona a la que ayudo.",
-    "Siento satisfacción al poder ayudar a otras personas.",
-    "Me siento conectado/a con los demás.",
-    "Me sobresalto o me altero ante ruidos inesperados.",
-    "Me siento con energía después de trabajar con las personas a las que ayudo.",
-    "Me resulta difícil separar mi vida personal de mi vida laboral como profesional de ayuda.",
-    "No soy tan productivo/a en el trabajo porque pierdo sueño debido a experiencias traumáticas de las personas a las que ayudo.",
-    "Pienso que puedo haber sido afectado/a por el estrés traumático de las personas a las que ayudo.",
-    "Me siento atrapado/a por mi trabajo como profesional de ayuda.",
-    "Debido a mi trabajo de ayuda, me he sentido “en tensión” o alerta por diversas cosas.",
-    "Me gusta mi trabajo como profesional de ayuda.",
-    "Me siento deprimido/a debido a las experiencias traumáticas de las personas a las que ayudo.",
-    "Siento como si estuviera viviendo el trauma de alguien a quien he ayudado.",
-    "Tengo creencias que me sostienen.",
-    "Estoy satisfecho/a con la forma en que logro mantenerme actualizado/a en técnicas y protocolos de ayuda.",
-    "Soy la persona que siempre quise ser.",
-    "Mi trabajo me hace sentir satisfecho/a.",
-    "Me siento agotado/a debido a mi trabajo como profesional de ayuda.",
-    "Tengo pensamientos y sentimientos positivos sobre las personas a las que ayudo y sobre cómo puedo ayudarlas.",
-    "Me siento abrumado/a porque mi carga de trabajo parece interminable.",
-    "Creo que puedo marcar una diferencia a través de mi trabajo.",
-    "Evito ciertas actividades o situaciones porque me recuerdan experiencias aterradoras de las personas a las que ayudo.",
-    "Me siento orgulloso/a de lo que puedo hacer para ayudar.",
-    "Como resultado de mi trabajo de ayuda, tengo pensamientos intrusivos y perturbadores.",
-    "Me siento atrapado/a o bloqueado/a por el sistema en el que trabajo.",
-    "Tengo pensamientos de que soy una persona exitosa como profesional de ayuda.",
-    "No puedo recordar partes importantes de mi trabajo con personas que han vivido traumas.",
-    "Soy una persona muy compasiva.",
-    "Me siento satisfecho/a de haber elegido este tipo de trabajo."
-  ];
+/* ================== CONFIGURACIÓN ================== */
+const APPS_SCRIPT_WEBAPP_URL = "PEGA_AQUI_TU_URL_EXEC";
+const ADMIN_KEY = "Ire_2026";
+/* ================================================== */
 
-  const SCALE_LABELS = {
-    CS: "Satisfacción por compasión (CS)",
-    BO: "Burnout / Agotamiento (BO)",
-    STS: "Estrés traumático secundario (STS)"
+const ITEMS = [
+ "Me siento feliz.",
+ "Me preocupo por más de una persona a la que ayudo.",
+ "Siento satisfacción al poder ayudar a otras personas.",
+ "Me siento conectado/a con los demás.",
+ "Me sobresalto o me altero ante ruidos inesperados.",
+ "Me siento con energía después de trabajar con las personas a las que ayudo.",
+ "Me resulta difícil separar mi vida personal de mi vida laboral.",
+ "No soy tan productivo/a porque pierdo sueño por historias traumáticas.",
+ "Creo que he sido afectado/a por el estrés traumático de otros.",
+ "Me siento atrapado/a por mi trabajo.",
+ "Me he sentido en tensión o alerta.",
+ "Me gusta mi trabajo.",
+ "Me siento deprimido/a por las experiencias de otros.",
+ "Siento que revivo el trauma de alguien.",
+ "Tengo creencias que me sostienen.",
+ "Estoy satisfecho/a con mi actualización profesional.",
+ "Soy la persona que siempre quise ser.",
+ "Mi trabajo me da satisfacción.",
+ "Me siento agotado/a.",
+ "Tengo pensamientos positivos sobre ayudar.",
+ "Mi carga laboral parece interminable.",
+ "Creo que marco una diferencia.",
+ "Evito cosas que me recuerdan traumas.",
+ "Me siento orgulloso/a de ayudar.",
+ "Tengo pensamientos intrusivos.",
+ "Me siento bloqueado/a por el sistema.",
+ "Me considero exitoso/a.",
+ "No recuerdo partes importantes del trabajo con trauma.",
+ "Soy una persona compasiva.",
+ "Estoy satisfecho/a con haber elegido este trabajo."
+];
+
+const REVERSE = new Set([1,4,15,17,29]);
+const SUB = {
+ CS:[3,6,12,16,18,20,22,24,27,30],
+ BO:[1,4,8,10,15,17,19,21,26,29],
+ STS:[2,5,7,9,11,13,14,23,25,28]
+};
+
+const cont = document.getElementById("preguntas");
+ITEMS.forEach((t,i)=>{
+  cont.innerHTML += `
+   <fieldset>
+    <legend>${i+1}. ${t}</legend>
+    ${[1,2,3,4,5].map(v=>`
+      <label><input type="radio" name="q${i+1}" value="${v}" required> ${v}</label>
+    `).join("")}
+   </fieldset>`;
+});
+
+function score(ans){
+  const s = ans.map((v,i)=>REVERSE.has(i+1)?6-v:v);
+  const sum = a=>a.reduce((t,i)=>t+s[i-1],0);
+  const lvl = x=>x<=22?"Bajo":x>=42?"Alto":"Promedio";
+  return {
+    sums:{
+      CS:sum(SUB.CS),
+      BO:sum(SUB.BO),
+      STS:sum(SUB.STS)
+    },
+    levels:{
+      CS:lvl(sum(SUB.CS)),
+      BO:lvl(sum(SUB.BO)),
+      STS:lvl(sum(SUB.STS))
+    }
+  };
+}
+
+document.getElementById("form").onsubmit = async e=>{
+  e.preventDefault();
+  const ans=[];
+  for(let i=1;i<=30;i++){
+    ans.push(+document.querySelector(`input[name=q${i}]:checked`).value);
+  }
+
+  const r = score(ans);
+
+  const payload = {
+    key: ADMIN_KEY,
+    timestamp: new Date().toISOString(),
+    candidate:{
+      nombre: nombre.value,
+      correo: correo.value
+    },
+    answers_raw: ans,
+    sums: r.sums,
+    levels: r.levels,
+    internal_flag:{
+      attention:(r.levels.BO==="Alto"||r.levels.STS==="Alto")?"ALERTA":"OK"
+    }
   };
 
-  // Reverse-scored item numbers (1-based)
-  const REVERSE = new Set([1,4,15,17,29]);
-
-  // Subscale item numbers (1-based)
-  const SUBSCALES = {
-    CS: [3,6,12,16,18,20,22,24,27,30],
-    BO: [1,4,8,10,15,17,19,21,26,29],
-    STS:[2,5,7,9,11,13,14,23,25,28]
-  };
-
-  function reverseScore(v){ return 6 - v; }
-
-  function levelFromSum(sum){
-    // For 10 items (10–50): Low ≤22; Average 23–41; High ≥42
-    if(sum <= 22) return {label:"Bajo", hint:"Rango bajo."};
-    if(sum >= 42) return {label:"Alto", hint:"Rango alto (posible área a revisar)."};
-    return {label:"Promedio", hint:"Rango promedio."};
-  }
-
-  function pct(sum){
-    // Map 10–50 to 0–100
-    return Math.round(((sum - 10) / 40) * 100);
-  }
-
-  const qWrap = document.getElementById("questions");
-  const likertLabels = [
-    {v:1, t:"1"},
-    {v:2, t:"2"},
-    {v:3, t:"3"},
-    {v:4, t:"4"},
-    {v:5, t:"5"},
-  ];
-
-  function renderQuestions(){
-    const frag = document.createDocumentFragment();
-    ITEMS.forEach((text, idx) => {
-      const n = idx + 1;
-      const field = document.createElement("fieldset");
-      field.className = "q";
-      const legend = document.createElement("legend");
-      legend.textContent = `${n}. ${text}`;
-      field.appendChild(legend);
-
-      const small = document.createElement("small");
-      small.textContent = "Escala: 1=Nunca, 2=Rara vez, 3=Algunas veces, 4=A menudo, 5=Muy a menudo";
-      field.appendChild(small);
-
-      const likert = document.createElement("div");
-      likert.className = "likert";
-
-      likertLabels.forEach(({v,t}) => {
-        const label = document.createElement("label");
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = `q${n}`;
-        input.value = String(v);
-        input.required = true;
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(` ${t}`));
-        likert.appendChild(label);
-      });
-
-      field.appendChild(likert);
-      frag.appendChild(field);
-    });
-    qWrap.innerHTML = "";
-    qWrap.appendChild(frag);
-  }
-
-  function getAnswers(){
-    const answers = [];
-    for(let i=1;i<=30;i++){
-      const sel = document.querySelector(`input[name="q${i}"]:checked`);
-      if(!sel) return null;
-      answers.push(parseInt(sel.value, 10));
-    }
-    return answers;
-  }
-
-  function computeScores(answers){
-    const scored = answers.map((v, idx) => {
-      const itemNo = idx + 1;
-      return REVERSE.has(itemNo) ? reverseScore(v) : v;
-    });
-
-    const sums = {};
-    for (const [key, items] of Object.entries(SUBSCALES)){
-      sums[key] = items.reduce((acc, itemNo) => acc + scored[itemNo - 1], 0);
-    }
-    return {sums, scored};
-  }
-
-  function setKPI(elId, key, sum){
-    const el = document.getElementById(elId);
-    const level = levelFromSum(sum);
-    el.innerHTML = `
-      <div class="row">
-        <h3>${SCALE_LABELS[key]}</h3>
-        <span class="pill">${level.label}</span>
-      </div>
-      <p><b>Puntaje:</b> <span class="mono">${sum}</span> / 50</p>
-      <div class="bar" aria-hidden="true"><div style="width:${pct(sum)}%"></div></div>
-      <p class="muted" style="margin-top:8px">${level.hint}</p>
-    `;
-  }
-
-  document.getElementById("proqolForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const answers = getAnswers();
-    if(!answers){
-      alert("Por favor responde todos los ítems.");
-      return;
-    }
-    const {sums} = computeScores(answers);
-    setKPI("kpiCS","CS",sums.CS);
-    setKPI("kpiBO","BO",sums.BO);
-    setKPI("kpiSTS","STS",sums.STS);
-    document.getElementById("results").style.display = "block";
-    document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
+  await fetch(APPS_SCRIPT_WEBAPP_URL,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(payload)
   });
 
-  document.getElementById("btnReset").addEventListener("click", () => {
-    document.getElementById("proqolForm").reset();
-    document.getElementById("results").style.display = "none";
-    window.scrollTo({top:0, behavior:"smooth"});
-  });
-
-  document.getElementById("btnExport").addEventListener("click", () => {
-    const answers = getAnswers();
-    if(!answers){
-      alert("Primero responde todos los ítems para exportar.");
-      return;
-    }
-    const {sums, scored} = computeScores(answers);
-    const payload = {
-      instrument: "ProQOL-5 (Spanish LATAM adaptation)",
-      timestamp: new Date().toISOString(),
-      answers_raw: answers,
-      answers_scored: scored,
-      sums,
-      interpretation: {
-        compassion_satisfaction: levelFromSum(sums.CS).label,
-        burnout: levelFromSum(sums.BO).label,
-        secondary_traumatic_stress: levelFromSum(sums.STS).label
-      },
-      scoring: {
-        reverse_items: [1,4,15,17,29],
-        subscales: SUBSCALES
-      }
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "proqol5_respuestas_es_latam.json";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  });
-
-  renderQuestions();
+  document.getElementById("msg").innerHTML =
+    "<div class='ok'><b>Formulario enviado correctamente.</b></div>";
+  e.target.reset();
+};
 </script>
 </body>
 </html>
